@@ -2,7 +2,7 @@ name: Build and Deploy
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   build-and-deploy:
@@ -26,10 +26,18 @@ jobs:
           DEPLOY_TARGET: gh-pages
       - run: touch out/.nojekyll
 
-      - name: Github Pages Deploy Action
-        uses: avinal/github-pages-deploy-action@v0.9
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
-          GITHUB_TOKEN: ${{ github.token }}
-          PAGES_BRANCH: gh-pages
-          BUILD_FROM: main # 배포될 브랜치
-          DOCS_FOLDER: out # 이 폴더에 있는 파일을 배포
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages # 배포될 브랜치
+          FOLDER: out # 이 폴더에 있는 파일을 배포
+          CLEAN: true # 배포 브랜치에 있는 파일들을 자동으로 삭제
+          
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4.4.2
+        with:
+          token: ${{ github.token }}
+          branch: gh-pages
+          folder: out
+          clean: true 
